@@ -1,3 +1,5 @@
+"""Adapted from Karpathy's makemore. Thanks Andrej!"""
+
 import os
 import sys
 import time
@@ -12,7 +14,6 @@ from torch.utils.data import Dataset
 from torch.utils.data.dataloader import DataLoader
 from torch.utils.tensorboard import SummaryWriter
 from biotite.sequence.io.fasta import FastaFile 
-from tokenizers import Tokenizer
 
 
 # -----------------------------------------------------------------------------
@@ -20,14 +21,14 @@ from tokenizers import Tokenizer
 @dataclass
 class ModelConfig:
     block_size: int = None # length of the input sequences of integers
-    vocab_size: int = None # the input integers are in range [0 .. vocab_size -1]
-    # parameters below control the sizes of each model slightly differently
+    vocab_size: int = None # the input integers are in range [0 .. vocab_size -1] 
     n_layer: int = 4
     embed_dim: int = 64
     n_head: int = 4
 
 # -----------------------------------------------------------------------------
 # Transformer Language Model (*exactly* as used in GPT-2)
+
 class NewGELU(nn.Module):
     """
     Implementation of the GELU activation function currently in Google BERT repo (identical to OpenAI GPT).
@@ -89,7 +90,7 @@ class Block(nn.Module):
         self.mlp = nn.ModuleDict(dict(
             c_fc    = nn.Linear(config.embed_dim, 4 * config.embed_dim),
             c_proj  = nn.Linear(4 * config.embed_dim, config.embed_dim),
-            act     = NewGELU(),
+            act     = nn.GELU(approximate="tanh"), 
         ))
         m = self.mlp
         self.mlpf = lambda x: m.c_proj(m.act(m.c_fc(x))) # MLP forward
@@ -229,9 +230,8 @@ def evaluate(model, dataset, batch_size=50, max_batches=None):
     model.train() # reset model back to training mode
     return mean_loss
 
-
 # ---------------------------------------------------------------------
-# Datasets for protein sequences 
+# Datasets for protein sequences and BytePair-encoded protein sequences 
 
 class ProteinDataset(Dataset):
     """Dataset for protein sequences with character-level tokenization"""
@@ -274,6 +274,9 @@ class ProteinDataset(Dataset):
         return x, y
 
 
+
+
+
 def create_datasets(input_file):
 
     # preprocessing of the input text file
@@ -289,7 +292,6 @@ def create_datasets(input_file):
     train_proteins = [proteins[i] for i in rp[:-test_set_size]]
     test_proteins = [proteins[i] for i in rp[-test_set_size:]]
     print(f"split up the dataset into {len(train_proteins)} training examples and {len(test_proteins)} test examples")
-
 
     chars = sorted(list(set(''.join(proteins)))) # all the possible characters
     tokens = sum(len(w) for w in proteins)
@@ -317,7 +319,6 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Make more proteins")
     # system/input/output
     parser.add_argument('--input-file', '-i', type=str, default='hypf.fa', help="input fasta file")
-    parser.add_argument('--tokenizer', type=str, default=None, help="path of tokenizer json")
     parser.add_argument('--work-dir', '-o', type=str, default='out', help="output working directory")
     parser.add_argument('--resume', action='store_true', help="when this flag is used, we will resume optimization from existing model in the workdir")
     parser.add_argument('--sample-only', action='store_true', help="just sample from the model and quit, don't train")
@@ -329,7 +330,7 @@ if __name__ == '__main__':
     # model
     parser.add_argument('--n-layer', type=int, default=4, help="number of layers")
     parser.add_argument('--n-head', type=int, default=4, help="number of heads")
-    parser.add_argument('--n-embd', type=int, default=64, help="number of feature channels in the model")
+    parser.add_argument('--embed-dim', type=int, default=64, help="number of feature channels in the model")
     # optimization
     parser.add_argument('--batch-size', '-b', type=int, default=32, help="batch size during optimization")
     parser.add_argument('--learning-rate', '-l', type=float, default=4e-3, help="learning rate")
@@ -344,7 +345,7 @@ if __name__ == '__main__':
     writer = SummaryWriter(log_dir=args.work_dir)
 
     # init datasets
-    train_dataset, test_dataset = create_datasets(args.input_file, tokenizer=args.tokenizer)
+    train_dataset, test_dataset = create_datasets(args.input_file)
     vocab_size = train_dataset.get_vocab_size()
     block_size = train_dataset.get_output_length()
     print(f"dataset determined that: {vocab_size=}, {block_size=}")
@@ -428,3 +429,4 @@ if __name__ == '__main__':
         if args.max_steps >= 0 and step >= args.max_steps:
             print_samples(num=10)  # do this a final time at the end 
             break
+
