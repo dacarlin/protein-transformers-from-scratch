@@ -2,7 +2,12 @@
 
 Video lecture series on building generative models of protein sequences. 
 
+Reference implementation: 
+
 - [Protein transformers on GitHub](https://github.com/dacarlin/protein-transformers)
+
+
+Video lectures: 
 
 | Lecture     |  Description                                                         | Duration | 
 |--------------|------------------------------------------------------------------|--------------
