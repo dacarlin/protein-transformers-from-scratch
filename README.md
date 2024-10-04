@@ -7,7 +7,7 @@
 |--------------|------------------------------------------------------------------|--------------
 | [Lecture 1: Choosing a dataset](https://www.youtube.com/watch?v=c2kFHtuEt8s) | Selecting a protein sequence dataset suitable for modeling | 15 minutes |
 | [Lecture 2: A simple protein language model](https://youtu.be/8rePVA8rpoY) | Building a simple protein language model that predicts the next amino acid given the previous three amino acids | 30 minutes | 
-| [Lecture 3: Implementing a protein transformer](https://www.youtube.com/watch?v=s75eFLYe3cc) | Building a protein transformer model from scratch |   | 
+| [Lecture 3: Implementing a protein transformer](https://www.youtube.com/watch?v=s75eFLYe3cc) | Building a protein transformer model from scratch | 30 minutes   | 
 | Lecture 4. Evaluating protein language models | Adding in evaluations for protein transformer models | 1 hour |  
 | Lecture 5. Scaling protein language models | Modeling all the protein diversity in the UniRef50 dataset by scaling up our models with GPU compute | 1 hour | 
 
