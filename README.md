@@ -7,7 +7,7 @@
 |--------------|------------------------------------------------------------------|--------------
 | [Lecture 1: Choosing a dataset](https://www.youtube.com/watch?v=c2kFHtuEt8s) | Selecting a protein sequence dataset suitable for modeling | 15 minutes |
 | [Lecture 2: A simple protein language model](https://youtu.be/8rePVA8rpoY) | Building a simple protein language model that predicts the next amino acid given the previous three amino acids | 30 minutes | 
-| Lecture 3: Implementing a protein transformer | Building a protein transformer model from scratch |   | 
+| [Lecture 3: Implementing a protein transformer](https://www.youtube.com/watch?v=s75eFLYe3cc) | Building a protein transformer model from scratch |   | 
 | Lecture 4. Evaluating protein language models | Adding in evaluations for protein transformer models | 1 hour |  
 | Lecture 5. Scaling protein language models | Modeling all the protein diversity in the UniRef50 dataset by scaling up our models with GPU compute | 1 hour | 
 
@@ -40,6 +40,7 @@ In this lecture, we'll build a simple language model to model the AcyP proteins 
 
 ### Lecture 3. Building a protein language model with a transformer architecture 
 
+- [Video for Lecture 3: Building a protein transformer from scratch](https://www.youtube.com/watch?v=s75eFLYe3cc)
 - [Notebook for Lecture 3](lecture_3.ipynb)
 
 In this lecture, we'll expand our language model to a decoder-only transformer architecture, building on the work we have done so far to train a model that's capable of generating new proteins like the AcyP homologs in our training set. We'll build out every aspect of the model from scratch (including the multi-head sequence attention mechanism), train the model, and then we'll show how to generate new sequences from the dataset. [I'd definitely recommend watching Andrej Karpathy's Makemore series](https://www.youtube.com/watch?v=VMj-3S1tku0&list=PLAqhIrjkxbuWI23v9cThsA9GvCAUhRvKZ) which does an amazing job of building up the transformer model step by step conceptually. 
